@@ -46,6 +46,7 @@ cluster:
       # - kube apiserver arguments here (https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver)
     # kubelet_arg:
       # - kubelet arguments here (https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet)
+    registries_value: {}   # explicit containerd config here
     registries:
       enabled: false
       # configs:

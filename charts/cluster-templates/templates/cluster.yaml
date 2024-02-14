@@ -197,7 +197,10 @@ spec:
     {{- end }}
     # machineSelectorFiles:
     # provisionGeneration:
-    {{- if and .Values.cluster.config.registries (eq .Values.cluster.config.registries.enabled true) }}
+    {{- if .Values.cluster.config.registries_value }}
+    registries: 
+{{ toYaml .Values.cluster.config.registries_value | indent 6 }}
+    {{- else if and .Values.cluster.config.registries (eq .Values.cluster.config.registries.enabled true) }}
     registries:
       configs:
         {{- range .Values.cluster.config.registries.configs }}
