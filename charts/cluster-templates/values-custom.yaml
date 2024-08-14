@@ -17,22 +17,23 @@ cluster:
   name: rke2-cluster-custom
   config:
     kubernetesVersion: v1.28.11+rke2r1 # https://github.com/rancher/rke2/releases
-    enableNetworkPolicy: true
+    projectNetworkIsolation: true
     localClusterAuthEndpoint:
       enabled: false
-    # additionalManifests: |-
-    #   apiVersion: v1
-    #   kind: Pod
-    #   metadata:
-    #     name: example-manifest
-    #   spec:
-    #     containers:
-    #     - name: example
-    #       image: example:1.0.0
-    #       ports:
-    #       - containerPort: 80
-    # agentEnvVars:
-      # - key:value
+    additionalManifests: |-
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: example-manifest
+      spec:
+        containers:
+        - name: example
+          image: example:1.0.0
+          ports:
+          - containerPort: 80
+    agentEnvVars:
+      - name: key
+        value: value
     # defaultClusterRoleForProjectMembers: ''
     # defaultPodSecurityAdmissionConfigurationTemplateName: ''
     # defaultPodSecurityPolicyTemplateName: ''
@@ -55,7 +56,7 @@ cluster:
       profile: '' # cis-1.6, cis-1.23
       selinux: false
       secrets_encryption: false
-      write_kubeconfig_mode: 0600
+      write_kubeconfig_mode: 600
       use_service_account_credentials: false
       protect_kernel_defaults: false
       cloud_provider_name: '' # https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/kubernetes-clusters-in-rancher-setup/set-up-cloud-providers

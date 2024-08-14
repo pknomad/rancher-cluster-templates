@@ -3,18 +3,21 @@ kind: Cluster
 metadata:
   {{- if .Values.cluster.labels }}
   labels:
-{{ toYaml .Values.cluster.labels | indent 4 }}
+  {{ toYaml .Values.cluster.labels | indent 4 }}
   {{- end }}
   {{- if .Values.cluster.annotations }}
   annotations:
-{{ toYaml .Values.cluster.annotations | indent 4 }}
+  {{ toYaml .Values.cluster.annotations | indent 4 }}
   {{- end }}
   name: {{ .Values.cluster.name }}
   namespace: fleet-default
 spec:
-  {{- if .Values.cluster.config.agentEnvs }}
+  {{- if .Values.cluster.config.agentEnvVars }}
   agentEnvVars:
-  {{ toYaml .Values.cluster.config.agentEnvs | indent 4 }}
+    {{- range .Values.cluster.config.agentEnvVars }}
+    - name: {{ .name }}
+      value: {{ .value }}
+    {{- end }}
   {{- end }}
   {{- if .Values.cloudCredentialSecretName }}
   cloudCredentialSecretName: cattle-global-data:{{ .Values.cloudCredentialSecretName }}
@@ -30,7 +33,7 @@ spec:
   {{- if .Values.cluster.config.defaultPodSecurityPolicyTemplateName }}
   defaultPodSecurityPolicyTemplateName: {{ .Values.cluster.config.defaultPodSecurityPolicyTemplateName }}
   {{- end }}
-  enableNetworkPolicy: {{ .Values.cluster.config.enableNetworkPolicy }}
+  enableNetworkPolicy: {{ .Values.cluster.config.projectNetworkIsolation }}
   # fleetAgentDeploymentCustomization:
   {{- if .Values.cluster.config.kubernetesVersion }}
   kubernetesVersion: {{ .Values.cluster.config.kubernetesVersion }}
@@ -186,7 +189,7 @@ spec:
         kind: AzureConfig
         {{- else if eq $.Values.cloudprovider "elemental" }}
         apiVersion: elemental.cattle.io/v1beta1
-        kind: MachineInventorySelectorTemplate 
+        kind: MachineInventorySelectorTemplate
         {{- end}}
         name: {{ $nodepool.name }}
       displayName: {{ $nodepool.displayName | default $nodepool.name }}
